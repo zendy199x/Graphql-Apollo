@@ -1,6 +1,7 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config();
 
 // Load schema & resolvers
@@ -33,8 +34,15 @@ const server = new ApolloServer({
 
 const app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
 server.start().then((res) => {
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: false });
   app.listen({ port: process.env.PORT || 4000 }, () =>
     console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
   );
